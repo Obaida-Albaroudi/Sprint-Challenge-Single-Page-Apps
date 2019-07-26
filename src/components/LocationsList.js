@@ -1,19 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import axios from "axios";
 
-export default function LocationsList({Locations}) {
-    const location = data.map((information) =>
-    <Card key={information}>
-        <h1>{information.name}</h1>   
-        <div>
-            <Content>Type: {information.type}</Content>
-            <Content>Dimenstions: {information.dimensions}</Content>
-        </div>
-    </Card> 
-    )
+import LocationCard from "./LocationCard.js"
+
+export default function LocationsList() {
+    const [Locations, setLocations] = useState([]);
+
+    useEffect(() => {
+        axios.get("https://rickandmortyapi.com/api/location/")
+        .then (info =>{
+            setLocations(info.data.results)
+        })
+        .catch(error => {
+            return "Locations"
+        });
+    }, []);
+
     //Over here I just return person as it represents each iteration of the array which is an object which is a person.
     return(
         <div >
-            {location}
+            { Locations.map( info =>{
+                return(
+                    <LocationCard name={info.name} type={info.type} dimension={info.dimension} residents={info.residents.length} />
+                )
+            })
+
+            }
         </div>
  
     )
